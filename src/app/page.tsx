@@ -8,18 +8,27 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/products", {
-        method: "GET",
-      });
-      if (!res.ok) {
-        console.log("Error fetching in Client API request: ");
+      try {
+        const res = await fetch("/api/products", {
+          method: "GET",
+        });
+        if (!res.ok) {
+          console.log("Error fetching in Client API request: ");
+        }
+        const result = await res.json();
+        setData(result.product);
+      } catch (error) {
+        console.log(error);
       }
-      const result = await res.json();
-
-      console.log(result);
     };
     fetchData();
   }, []);
 
-  return <main>Hello World</main>;
+  return (
+    <main>
+      {data?.map((product: { _id: string; name: string }) => (
+        <h1 key={product._id}>{product.name}</h1>
+      ))}
+    </main>
+  );
 }
